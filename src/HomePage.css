@@ -1,0 +1,35 @@
+/* src/HomePage.css */
+.homepage {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+header {
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.slogan {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.services,
+.contact {
+  margin-top: 20px;
+}
+
+h2 {
+  color: #333;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 5px 0;
+}
