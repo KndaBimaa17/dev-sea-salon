@@ -1,25 +1,28 @@
-// models/Reservation.js
-const { DataTypes } = require('sequelize');
-
-const Reservation = (sequelize) => {
-  return sequelize.define('Reservation', {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    phoneNumber: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    service: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    dateTime: {
-      type: DataTypes.DATE,
-      allowNull: false
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Reservation extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
+  }
+  Reservation.init({
+    name: DataTypes.STRING,
+    phoneNumber: DataTypes.STRING,
+    typeOfService: DataTypes.STRING,
+    date: DataTypes.DATE,
+    time: DataTypes.TIME,
+    branchId: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Reservation',
   });
+  return Reservation;
 };
-
-module.exports = Reservation;

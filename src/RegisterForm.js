@@ -1,6 +1,5 @@
 // src/RegisterForm.js
 import React, { useState } from "react";
-import axios from "axios";
 
 const RegisterForm = () => {
   const [fullName, setFullName] = useState("");
@@ -8,23 +7,25 @@ const RegisterForm = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/auth/register", {
-        fullName,
-        email,
-        phoneNumber,
-        password,
-      });
-      console.log("User registered:", response.data);
-    } catch (error) {
-      console.error("Error registering user:", error);
+    const response = await fetch("/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fullName, email, phoneNumber, password }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      alert("Registration successful!");
+    } else {
+      alert(data.error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleRegister}>
       <h2>Register</h2>
       <div>
         <label>Full Name:</label>

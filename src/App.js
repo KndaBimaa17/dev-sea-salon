@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from "react";
 import "./styles.css";
 import ReservationForm from "./ReservationForm";
@@ -7,8 +6,9 @@ import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 
 const App = () => {
-  const [reviews, setReviews] = React.useState([]);
+  const [reviews, setReviews] = useState([]);
   const [token, setToken] = useState("");
+  const [showLogin, setShowLogin] = useState(true);
 
   const addReview = (review) => {
     setReviews([...reviews, review]);
@@ -19,8 +19,27 @@ const App = () => {
       <h1>SEA Salon</h1>
       {!token ? (
         <>
-          <RegisterForm />
-          <LoginForm setToken={setToken} />
+          {showLogin ? (
+            <>
+              <LoginForm setToken={setToken} />
+              <p>
+                Don't have an account?{" "}
+                <a href="#" onClick={() => setShowLogin(false)}>
+                  Register
+                </a>
+              </p>
+            </>
+          ) : (
+            <>
+              <RegisterForm />
+              <p>
+                Already have an account?{" "}
+                <a href="#" onClick={() => setShowLogin(true)}>
+                  Login
+                </a>
+              </p>
+            </>
+          )}
         </>
       ) : (
         <>

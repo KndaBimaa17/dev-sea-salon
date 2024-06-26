@@ -1,53 +1,29 @@
-// server.js
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
-const { Sequelize } = require("sequelize");
-const reservationRoutes = require("./routes/reservations");
-const reviewRoutes = require("./routes/reviews");
-const authRoutes = require("../routes/Auth");
-const authenticate = require("../middleware/Auth");
+const sequelize = require("./config/database");
+const Branch = require("./models/Branch")(sequelize);
+const Reservation = require("./models/Reservation")(sequelize);
 
 const app = express();
-const PORT = 5000;
-
-// Middleware
 app.use(bodyParser.json());
-app.use(cors());
-
-// Database connection
-const sequelize = new Sequelize("sea_salon", "root", "password", {
-  host: "localhost",
-  dialect: "mysql",
-});
-
-sequelize
-  .authenticate()
-  .then(() => console.log("Connected to MySQL"))
-  .catch((err) => console.error("Unable to connect to MySQL:", err));
-
-// Sync models
-sequelize.sync({ force: true }).then(() => {
-  console.log("Database & tables created!");
-  const UserModel = require("./models/User")(sequelize);
-  UserModel.create({
-    fullName: "Thomas N",
-    email: "thomas.n@compfest.id",
-    phoneNumber: "08123456789",
-    password: bcrypt.hashSync("Admin123", 10),
-    role: "Admin",
-  });
-});
 
 // Routes
-app.use("/auth", authRoutes(sequelize));
-app.use("/reservations", authenticate, reservationRoutes(sequelize));
-app.use("/reviews", reviewRoutes(sequelize));
+const branchRoutes = require("./routes/branches")(sequelize);
+const reservationRoutes = require("./routes/reservations")(sequelize);
+app.use("/branches", branchRoutes);
+app.use("/reservations", reservationRoutes);
 
-app.get("/", (req, res) => {
-  res.send("SEA Salon API");
-});
+// Synchronize sequelize
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database synchronized");
+  })
+  .catch((err) => {
+    console.error("Error synchronizing database:", err);
+  });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

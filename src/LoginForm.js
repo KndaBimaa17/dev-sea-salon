@@ -1,27 +1,42 @@
 // src/LoginForm.js
 import React, { useState } from "react";
-import axios from "axios";
 
 const LoginForm = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Form submitted with:", { email, password });
+
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
-        email,
-        password,
+      const response = await fetch("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
-      setToken(response.data.token);
-      console.log("User logged in:", response.data);
+
+      console.log("Response received:", response);
+
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (response.ok) {
+        console.log("Login successful:", data.token);
+        setToken(data.token);
+      } else {
+        console.error("Login error:", data.error);
+        alert(data.error);
+      }
     } catch (error) {
-      console.error("Error logging in:", error);
+      console.error("Fetch error:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
       <h2>Login</h2>
       <div>
         <label>Email:</label>
